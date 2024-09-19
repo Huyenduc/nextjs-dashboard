@@ -93,22 +93,22 @@ export async function fetchFilteredInvoices(
   try {
     const invoices = await sql<InvoicesTable>`
       SELECT
-        invoices.id,
-        invoices.amount,
-        invoices.date,
-        invoices.status,
-        customers.name,
-        customers.email,
-        customers.image_url
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
+        i.id,
+        i.amount,
+        i.date,
+        i.status,
+        c.name,
+        c.email,
+        c.image_url
+      FROM invoices i
+      JOIN customers c ON i.customer_id = c.id
       WHERE
-        customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`} OR
-        invoices.amount::text ILIKE ${`%${query}%`} OR
-        invoices.date::text ILIKE ${`%${query}%`} OR
-        invoices.status ILIKE ${`%${query}%`}
-      ORDER BY invoices.date DESC
+        c.name ILIKE ${`%${query}%`} OR
+        c.email ILIKE ${`%${query}%`} OR
+        i.amount::text ILIKE ${`%${query}%`} OR
+        i.date::text ILIKE ${`%${query}%`} OR
+        i.status ILIKE ${`%${query}%`}
+      ORDER BY i.date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
