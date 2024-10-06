@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  email       String    @unique
+  soDienThoai String    @unique @map("so_dien_thoai")
+  dienChi     String    @map("dien_chi")
+  username    String    @unique
+  password    String
+  ngaySinh    DateTime  @map("ngay_sinh")
+  role        Role      @default(USER)
+  CCCD        String?   @unique
+  urlImage    String?   @map("url_image")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @map("updated_at")
+  sinhVien    SinhVien?
+  nhanVien    Nhanvien?
+}
+
+model SinhVien {
+  id        String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String             @unique @map("user_id") @db.Uuid
+  mssv      String             @unique
+  lop       String
+  khoaVien  String             @map("khoa_vien")
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @default(now()) @map("updated_at")
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  thuePhong HopDongThuePhong[]
+}
+
+model Nhanvien {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @unique @map("user_id") @db.Uuid
+  chucVu    String   @map("chuc_vu")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Phong {
+  id        String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenPhong  String             @map("ten_phong")
+  giaPhong  Int                @map("gia_phong")
+  soNguoi   Int                @map("so_nguoi")
+  tinhTrang Boolean            @default(false) @map("tinh_trang")
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @default(now()) @map("updated_at")
+  thuePhong HopDongThuePhong[]
+}
+
+model HopDongThuePhong {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sinhVienId String    @map("sinh_vien_id") @db.Uuid
+  phongId    String    @map("phong_id") @db.Uuid
+  soTienthue Int       @map("so_tien_thue")
+  ngayThue   DateTime  @map("ngay_thue")
+  ngayTra    DateTime? @map("ngay_tra")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @default(now()) @map("updated_at")
+  sinhVien   SinhVien  @relation(fields: [sinhVienId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  phong      Phong     @relation(fields: [phongId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([sinhVienId, phongId])
+}
+
+enum TrangThai {
+  DATHANHTOAN
+  CHUATHANHTOAN
+  QUAHAN
+}
+
+// model hoaDon {
+//   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+//   hopDongId String   @map("hop_dong_id")
+//   soTien     Int      @map("so_tien")
+//   trangthai  TrangThai @map("trang_thai") 
+//   createdAt  DateTime @default(now()) @map("created_at")
+//   updatedAt  DateTime @default(now()) @map("updated_at")
+//   hopDong    HopDongThuePhong @relation(fields: [hopDongId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+// }
