@@ -5,14 +5,19 @@
     "dev": "next dev",
     "start": "next start",
     "lint": "next lint --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "migrate-dev": "prisma migrate dev",
+    "prisma-studio": "prisma studio"
   },
   "dependencies": {
     "@heroicons/react": "^2.1.4",
     "@prisma/client": "5.20.0",
     "@tailwindcss/forms": "^0.5.7",
-    "@trpc/client": "11.0.0-rc.553",
-    "@trpc/server": "11.0.0-rc.553",
+    "@tanstack/react-query": "^5.59.0",
+    "@trpc/client": "11.0.0-rc.566",
+    "@trpc/next": "11.0.0-rc.566",
+    "@trpc/react-query": "11.0.0-rc.566",
+    "@trpc/server": "11.0.0-rc.566",
     "@vercel/postgres": "^0.8.0",
     "autoprefixer": "10.4.19",
     "bcrypt": "^5.1.1",

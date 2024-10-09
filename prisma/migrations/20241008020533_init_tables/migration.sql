@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER', 'OWNER');
 
 -- CreateEnum
 CREATE TYPE "TrangThai" AS ENUM ('DATHANHTOAN', 'CHUATHANHTOAN', 'QUAHAN');
